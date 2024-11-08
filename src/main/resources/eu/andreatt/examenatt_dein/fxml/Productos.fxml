@@ -18,7 +18,7 @@
 
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="672.0" prefWidth="915.0" stylesheets="/eu/andreatt/examenatt_dein/css/application.css" xmlns="http://javafx.com/javafx/22.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.andreatt.examenatt_dein.controllers.ProductoController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="672.0" prefWidth="915.0"  xmlns="http://javafx.com/javafx/22.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.andreatt.examenatt_dein.controllers.ProductoController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
