@@ -16,6 +16,11 @@ import java.sql.SQLException;
 public class ProductoDao {
     private ConexionBD conexion;
 
+    /**
+     * Carga todos los productos desde la base de datos y los devuelve en una lista observable.
+     *
+     * @return una lista observable de productos
+     */
     public ObservableList<Producto> cargarProductos() {
         ObservableList<Producto> productos = FXCollections.observableArrayList();
         try {
@@ -42,6 +47,12 @@ public class ProductoDao {
         return productos;
     }
 
+    /**
+     * Inserta un nuevo producto en la base de datos.
+     *
+     * @param p el producto a insertar
+     * @return true si la inserción fue exitosa, false en caso contrario
+     */
     public boolean crearProducto(Producto p) {
         try {
             conexion = new ConexionBD();
@@ -63,6 +74,12 @@ public class ProductoDao {
         return false;
     }
 
+    /**
+     * Recupera la imagen asociada a un producto desde la base de datos.
+     *
+     * @param codigo el código del producto cuyo imagen se desea recuperar
+     * @return un InputStream con la imagen, o null si no existe
+     */
     public InputStream dameImagen(String codigo) {
         try {
             conexion = new ConexionBD();
@@ -84,6 +101,12 @@ public class ProductoDao {
         return null;
     }
 
+    /**
+     * Elimina un producto de la base de datos.
+     *
+     * @param p el producto a eliminar
+     * @return true si la eliminación fue exitosa, false en caso contrario
+     */
     public boolean borrarProducto(Producto p) {
         try {
             conexion = new ConexionBD();
@@ -102,6 +125,12 @@ public class ProductoDao {
         return false;
     }
 
+    /**
+     * Actualiza los detalles de un producto en la base de datos.
+     *
+     * @param p el producto con los nuevos datos
+     * @return true si la actualización fue exitosa, false en caso contrario
+     */
     public boolean editarProducto(Producto p) {
         try {
             conexion = new ConexionBD();
@@ -123,6 +152,13 @@ public class ProductoDao {
         return false;
     }
 
+    /**
+     * Inserta una imagen en la base de datos asociada a un producto.
+     *
+     * @param ruta la ruta del archivo de imagen
+     * @param codigo el código del producto al que se le asociará la imagen
+     * @return true si la inserción fue exitosa, false en caso contrario
+     */
     public boolean insertarImagen(String ruta, String codigo) {
         try {
             File file = new File(ruta);
@@ -145,6 +181,12 @@ public class ProductoDao {
         return false;
     }
 
+    /**
+     * Verifica si un producto existe en la base de datos.
+     *
+     * @param codigo el código del producto a verificar
+     * @return true si el producto existe, false en caso contrario
+     */
     public boolean existeProducto(String codigo) {
         try {
             conexion = new ConexionBD();
@@ -167,8 +209,3 @@ public class ProductoDao {
         return false;
     }
 }
-
-
-
-
-

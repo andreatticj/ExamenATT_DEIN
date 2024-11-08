@@ -128,7 +128,7 @@ public class ProductoController {
             String errores = validarDatos();
 
             //Mostrar errores existentes
-            if(errores.length()>0) {
+            if(errores.isEmpty()) {
                 generarVentana(Alert.AlertType.ERROR, errores, "ERROR");
             }else {
                 //Actualizar producto - con imagen si elige
