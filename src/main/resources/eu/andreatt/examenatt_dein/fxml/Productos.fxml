@@ -18,7 +18,7 @@
 
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="672.0" prefWidth="915.0" stylesheets="@../../../../../../../../pruebas/src/main/resources/eu/andreatt/pruebas/css/application.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.andreatt.pruebas.controllers.ProductosController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="672.0" prefWidth="915.0" stylesheets="/eu/andreatt/examenatt_dein/css/application.css" xmlns="http://javafx.com/javafx/22.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.andreatt.examenatt_dein.controllers.ProductoController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
@@ -79,9 +79,9 @@
                <padding>
                   <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
                </padding>
-               <graphic>
-                  <FontIcon iconLiteral="far-file-image" styleClass="icono" />
-               </graphic>
+<!--               <graphic>-->
+<!--                  <FontIcon iconLiteral="far-file-image" styleClass="icono" />-->
+<!--               </graphic>-->
             </Button>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="80.0" GridPane.columnSpan="2" GridPane.rowIndex="5">
                <children>
