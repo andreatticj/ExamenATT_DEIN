@@ -28,7 +28,7 @@ public class ProductoController {
     private CheckBox checkBoxDisponible;
 
     @FXML
-    private TableColumn<?, ?> columnaCodigo;
+    private TableColumn<P, ?> columnaCodigo;
 
     @FXML
     private TableColumn<?, ?> columnaDisponible;
