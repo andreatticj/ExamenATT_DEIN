@@ -133,7 +133,7 @@ public class ProductoController {
             }else {
                 //Actualizar producto - con imagen si elige
                 try {
-                    productoDao.editarProducto(new Producto(textFieldCodigoProducto.getText(), textFieldNombre.getText(), Float.parseFloat(textFieldPrecio.getText()), checkBoxDisponible.isSelected()));
+                    productoDao.editarProducto(new Producto(textFieldCodigoProducto.getText(), textFieldNombre.getText(), Float.parseFloat(textFieldPrecio.getText()), disponible));
                     if (rutaImagenActual != null) {
                         productoDao.insertarImagen(rutaImagenActual, codigo);
                     }
@@ -198,7 +198,7 @@ public class ProductoController {
                 try {
                     productoDao.crearProducto(new Producto(textFieldCodigoProducto.getText(), textFieldNombre.getText(), Float.parseFloat(textFieldPrecio.getText()), disponible));
                     //Añadir producto - con imagen si elige
-                    if(imageView!=null) {
+                    if(ruta != null && !ruta.isEmpty()) {
                         productoDao.insertarImagen(ruta, codigo);
                     }
                     generarVentana(Alert.AlertType.INFORMATION, "Se ha CREADO un producto", "INFO");
@@ -214,6 +214,7 @@ public class ProductoController {
             }
         }
     }
+
 
     @FXML
     void actionLimpiar(ActionEvent event) {
@@ -319,21 +320,39 @@ public class ProductoController {
 
         // Valida que los campos no estén vacíos y que los valores numéricos sean correctos.
         if (textFieldNombre.getText().isEmpty()) {
-            errores+=("* El nombre no puede estar vacío.\n");
+            errores += ("* El NOMBRE no puede estar vacío.\n");
         }
         if (textFieldCodigoProducto.getText().isEmpty()) {
-            errores+=("* El codigo del producto no puede estar vacía.\n");
+            errores += ("* El CODIGO del producto no puede estar vacía.\n");
+        } else {
+            if (textFieldCodigoProducto.getText().length() != 5) {
+                errores += "* El CÓDIGO requiere exactamente 5 dígitos\n";
+            }
         }
-        if ( textFieldPrecio.getText().isEmpty()) {
-            errores+=("* El precio puede estar vacía.\n");
+
+        if (textFieldPrecio.getText().isEmpty()) {
+            errores += ("* El PRECIO puede estar vacío.\n");
+        } else {
+            try {
+                Float.parseFloat(textFieldPrecio.getText());
+            } catch (NumberFormatException e) {
+                errores += "* El PRECIO debe ser un valor numérico válido (decimal).\n";
+            }
+
+            //Validar checkbox
+            if (checkBoxDisponible.isSelected()) {
+                disponible = 1;
+            } else {
+                disponible = 0;
+            }
         }
 
         return errores;
     }
+
     private void configureFileChooser(FileChooser fileChooser) {
         fileChooser.setTitle("Seleccionar Imágenes");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Imágenes", "*.png", "*.jpg", "*.jpeg"));
     }
-
 
 }
