@@ -1,5 +1,6 @@
 package eu.andreatt.examenatt_dein.controllers;
 
+import eu.andreatt.examenatt_dein.model.Producto;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -28,16 +29,16 @@ public class ProductoController {
     private CheckBox checkBoxDisponible;
 
     @FXML
-    private TableColumn<P, ?> columnaCodigo;
+    private TableColumn<Producto, String> columnaCodigo;
 
     @FXML
-    private TableColumn<?, ?> columnaDisponible;
+    private TableColumn<Producto, Boolean> columnaDisponible;
 
     @FXML
-    private TableColumn<?, ?> columnaNombre;
+    private TableColumn<Producto, String> columnaNombre;
 
     @FXML
-    private TableColumn<?, ?> columnaPrecio;
+    private TableColumn<Producto, Float> columnaPrecio;
 
     @FXML
     private ImageView imageView;
