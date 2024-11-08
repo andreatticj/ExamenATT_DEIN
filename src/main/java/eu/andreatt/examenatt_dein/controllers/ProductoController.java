@@ -79,6 +79,10 @@ public class ProductoController {
     String ruta, rutaImagenActual;
 
 
+    /**
+     * Inicializa el controlador cargando los productos, configurando las columnas de la tabla,
+     * creando el menú contextual y estableciendo la configuración inicial de la interfaz.
+     */
     @FXML
     public void initialize() {
         try {
@@ -117,39 +121,56 @@ public class ProductoController {
         }
     }
 
+    /**
+     * Muestra una ventana con la información sobre la aplicación.
+     *
+     * @param event El evento que dispara la acción.
+     */
     @FXML
     void acercaDe(ActionEvent event) {
         generarVentana(Alert.AlertType.INFORMATION, "Gestión de productos 1.0 \nAutor: Andrea Tortosa", "INFO");
     }
 
+    /**
+     * Actualiza la información de un producto con los datos introducidos en los campos.
+     * Valida los datos antes de realizar la actualización.
+     *
+     * @param event El evento que dispara la acción.
+     */
     @FXML
     void actionActualizar(ActionEvent event) {
-            //Validar errores
-            String errores = validarDatos();
+        //Validar errores
+        String errores = validarDatos();
 
-            //Mostrar errores existentes
-            if(errores.isEmpty()) {
-                generarVentana(Alert.AlertType.ERROR, errores, "ERROR");
-            }else {
-                //Actualizar producto - con imagen si elige
-                try {
-                    productoDao.editarProducto(new Producto(textFieldCodigoProducto.getText(), textFieldNombre.getText(), Float.parseFloat(textFieldPrecio.getText()), disponible));
-                    if (rutaImagenActual != null) {
-                        productoDao.insertarImagen(rutaImagenActual, codigo);
-                    }
-                    generarVentana(Alert.AlertType.INFORMATION, "Se ha ACTUALIZADO un producto", "INFO");
-
-                    //Refrescar tabla
-                    productosExistentes = productoDao.cargarProductos();
-                    tableProductos.setItems(productosExistentes);
-                } catch (Exception e) {
-                    generarVentana(Alert.AlertType.ERROR, e.getMessage(), "ERROR");
+        //Mostrar errores existentes
+        if(errores.isEmpty()) {
+            generarVentana(Alert.AlertType.ERROR, errores, "ERROR");
+        }else {
+            //Actualizar producto - con imagen si elige
+            try {
+                productoDao.editarProducto(new Producto(textFieldCodigoProducto.getText(), textFieldNombre.getText(), Float.parseFloat(textFieldPrecio.getText()), disponible));
+                if (rutaImagenActual != null) {
+                    productoDao.insertarImagen(rutaImagenActual, codigo);
                 }
-                //Vaciar campos
-                vaciarCampos();
-            }
-        }
+                generarVentana(Alert.AlertType.INFORMATION, "Se ha ACTUALIZADO un producto", "INFO");
 
+                //Refrescar tabla
+                productosExistentes = productoDao.cargarProductos();
+                tableProductos.setItems(productosExistentes);
+            } catch (Exception e) {
+                generarVentana(Alert.AlertType.ERROR, e.getMessage(), "ERROR");
+            }
+            //Vaciar campos
+            vaciarCampos();
+        }
+    }
+
+    /**
+     * Acción que se ejecuta al hacer clic en una fila de la tabla.
+     * Rellena los campos con la información del producto seleccionado.
+     *
+     * @param event El evento que dispara la acción.
+     */
     @FXML
     void actionClickTabla(MouseEvent event) {
         //Si se ha seleccionado un producto de la tabla
@@ -184,6 +205,12 @@ public class ProductoController {
         }
     }
 
+    /**
+     * Crea un nuevo producto con los datos introducidos en los campos.
+     * Si el producto ya existe, muestra un mensaje de error.
+     *
+     * @param event El evento que dispara la acción.
+     */
     @FXML
     void actionCrear(ActionEvent event) {
         String errores = validarDatos();
@@ -216,11 +243,21 @@ public class ProductoController {
     }
 
 
+    /**
+     Resetea todos los campos a su estado inicial.
+
+     * @param event El evento que dispara la acción.
+     */
     @FXML
     void actionLimpiar(ActionEvent event) {
         vaciarCampos();
     }
 
+    /**
+     * Abre un selector de archivos para elegir una imagen y la asigna al producto.
+     *
+     * @param event El evento que dispara la acción.
+     */
     @FXML
     void actionSeleccionarImagen(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -247,112 +284,123 @@ public class ProductoController {
         }
     }
 
+    /**
+     * Elimina el producto seleccionado despues de una confirmación por parte del usuario.
+     */
     public void eliminar() {
-        try {
-            //Borrar producto
-            productoDao.borrarProducto(producto);
-            generarVentana(Alert.AlertType.INFORMATION, "Se ha BORRADO un producto", "INFO");
-            try {
-                //Refrescar tabla
-                productosExistentes = productoDao.cargarProductos();
-                tableProductos.setItems(productosExistentes);
-            } catch (Exception e) {
-                generarVentana(Alert.AlertType.ERROR, "ERROR al cargar la información", "ERROR");
+        // Crear una alerta de confirmación
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar Eliminación");
+        alert.setHeaderText("¿Estás seguro de eliminar este producto?");
+        alert.setContentText("Una vez eliminado, no podrás recuperarlo.");
+
+        // Mostrar la alerta y esperar la respuesta del usuario
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    productoDao.borrarProducto(producto);
+                    // Actualizar la tabla
+                    productosExistentes = productoDao.cargarProductos();
+                    tableProductos.setItems(productosExistentes);
+                    generarVentana(Alert.AlertType.INFORMATION, "Producto eliminado", "INFO");
+                } catch (Exception e) {
+                    generarVentana(Alert.AlertType.ERROR, e.getMessage(), "ERROR");
+                }
             }
-
-            //Vaciar campos
-            vaciarCampos();
-        } catch (Exception e) {
-            generarVentana(Alert.AlertType.ERROR, "ERROR al borrar producto", "ERROR");
-        }
+        });
     }
 
-    private void vaciarCampos() {
-            textFieldCodigoProducto.setText("");
-            textFieldNombre.setText("");
-            textFieldPrecio.setText("");
-            checkBoxDisponible.setSelected(false);
-
-            textFieldCodigoProducto.setDisable(false);
-            botonCrear.setDisable(false);
-            botonActualizar.setDisable(true);
-            imageView.setImage(null);
-        }
-
+    /**
+     * Muestra la imagen del producto seleccionado en una nueva ventana.
+     */
     public void mostrarImagen() {
-        // Mostrar imagen si tiene
-        if (productoDao.dameImagen(producto.getCodigo()) != null) {
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
+        Stage stage = new Stage();
+        VBox vbox = new VBox();
+        ImageView imageView = new ImageView();
+        imageView.setImage(new Image(rutaImagenActual));
+        vbox.getChildren().add(imageView);
+        vbox.setAlignment(Pos.CENTER);
 
-            //Instanciar layout
-            VBox vbox = new VBox();
-            vbox.setAlignment(Pos.CENTER);
-
-            //Añadir imagen
-            ImageView imageView = new ImageView(new Image(productoDao.dameImagen(producto.getCodigo())));
-            imageView.setPreserveRatio(true);
-            imageView.setFitWidth(300);
-            imageView.setFitHeight(300);
-            vbox.getChildren().add(imageView);
-
-            //Escena
-            Scene scene = new Scene(vbox, 300, 300);
-            stage.setTitle("PRODUCTO");
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.showAndWait();
-        } else {
-            generarVentana(Alert.AlertType.ERROR, "El producto NO tiene imagen", "ERROR");
-        }
+        Scene scene = new Scene(vbox, 300, 300);
+        stage.setScene(scene);
+        stage.setTitle("Imagen del Producto");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
     }
 
-    private void generarVentana(Alert.AlertType tipoDeAlerta, String mensaje, String title) {
-        Alert alerta = new Alert(tipoDeAlerta);
-        alerta.setContentText(mensaje);
-        alerta.setHeaderText(null);
-        alerta.setTitle(title);
-        alerta.showAndWait();
+    /**
+     * Muestra una ventana con el mensaje proporcionado.
+     *
+     * @param tipo    El tipo de alerta a mostrar (ERROR, INFORMATION, etc.).
+     * @param mensaje El mensaje a mostrar en la ventana.
+     * @param titulo  El título de la ventana.
+     */
+    private void generarVentana(Alert.AlertType tipo, String mensaje, String titulo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
+    /**
+     * Vacía los campos de texto de la interfaz.
+     */
+    private void vaciarCampos() {
+        textFieldCodigoProducto.setText("");
+        textFieldNombre.setText("");
+        textFieldPrecio.setText("");
+        imageView.setImage(null);
+        checkBoxDisponible.setSelected(false);
+        textFieldCodigoProducto.setDisable(false);
+        botonCrear.setDisable(false);
+        botonActualizar.setDisable(true);
+        ruta = null;
+        rutaImagenActual = null;
+    }
+
+    /**
+     * Valida los datos introducidos en los campos de texto.
+     *
+     * @return Un string con los errores de validación (si los hay).
+     */
     private String validarDatos() {
         String errores = "";
-
-        // Valida que los campos no estén vacíos y que los valores numéricos sean correctos.
-        if (textFieldNombre.getText().isEmpty()) {
-            errores += ("* El NOMBRE no puede estar vacío.\n");
+        codigo = textFieldCodigoProducto.getText();
+        nombre = textFieldNombre.getText();
+        try {
+            precio = Float.parseFloat(textFieldPrecio.getText());
+        }catch (NumberFormatException e) {
+            errores = errores + "El precio debe ser numérico \n";
         }
-        if (textFieldCodigoProducto.getText().isEmpty()) {
-            errores += ("* El CODIGO del producto no puede estar vacía.\n");
-        } else {
-            if (textFieldCodigoProducto.getText().length() != 5) {
-                errores += "* El CÓDIGO requiere exactamente 5 dígitos\n";
-            }
+        if(codigo.isEmpty()) {
+            errores = errores + "Introduce un CÓDIGO válido \n";
+        }
+        if(nombre.isEmpty()) {
+            errores = errores + "Introduce un NOMBRE válido \n";
+        }
+        if(textFieldPrecio.getText().isEmpty()) {
+            errores = errores + "Introduce un PRECIO válido \n";
         }
 
-        if (textFieldPrecio.getText().isEmpty()) {
-            errores += ("* El PRECIO puede estar vacío.\n");
-        } else {
-            try {
-                Float.parseFloat(textFieldPrecio.getText());
-            } catch (NumberFormatException e) {
-                errores += "* El PRECIO debe ser un valor numérico válido (decimal).\n";
-            }
-
-            //Validar checkbox
-            if (checkBoxDisponible.isSelected()) {
-                disponible = 1;
-            } else {
-                disponible = 0;
-            }
+        //Disposición de disponibilidad
+        if(checkBoxDisponible.isSelected()) {
+            disponible = 1;
+        }else {
+            disponible = 0;
         }
 
         return errores;
     }
 
+    /**
+     * Configura el tipo de archivos que se pueden seleccionar en el FileChooser.
+     *
+     * @param fileChooser El FileChooser a configurar.
+     */
     private void configureFileChooser(FileChooser fileChooser) {
-        fileChooser.setTitle("Seleccionar Imágenes");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Imágenes", "*.png", "*.jpg", "*.jpeg"));
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Imágenes", "*.jpg", "*.png");
+        fileChooser.getExtensionFilters().add(extensionFilter);
     }
 
 }
