@@ -142,7 +142,7 @@ public class ProductoController {
         //Validar errores
         String errores = validarDatos();
 
-        //Mostrar errores existentes
+        //Mostrar errores existentes en los camos
         if(errores.isEmpty()) {
             generarVentana(Alert.AlertType.ERROR, errores, "ERROR");
         }else {
